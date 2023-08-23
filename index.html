@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa de Localização</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <form id="locationForm">
+        <input type="text" id="destinationInput" placeholder="Digite o destino">
+        <button type="submit">Buscar</button>
+    </form>
+    <button id="startRoute">Iniciar Rota GPS</button>
+    <div id="mapa"></div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#locationForm").submit(function (event) {
+                event.preventDefault();
+                var destino = $("#destinationInput").val();
+                $.ajax({
+                    url: "/obterCoordenadas",
+                    method: "GET",
+                    data: { destino: destino },
+                    success: function (data) {
+                        var embedCode = gerarEmbedCode(data.latitude, data.longitude);
+                        $("#mapa").html(embedCode);
+                    },
+                    error: function () {
+                        $("#mapa").html("Localização não encontrada");
+                    }
+                });
+            });
+
+            $("#startRoute").click(function () {
+                if ("geolocation" in navigator) {
+                    navigator.geolocation.getCurrentPosition(function (position) {
+                        var origin = position.coords.latitude + "," + position.coords.longitude;
+                        var destino = $("#destinationInput").val();
+                        window.location.href = "https://www.google.com/maps/dir/" + origin + "/" + destino;
+                    });
+                } else {
+                    alert("Geolocalização não suportada pelo navegador.");
+                }
+            });
+
+            function gerarEmbedCode(latitude, longitude) {
+                return '<iframe src="https://www.google.com/maps/embed/v1/directions' +
+                       '?key=AIzaSyAnZd-5OxzC697mbdB_Y4oQ0zZaUItbILM' +
+                       '&origin=Current+Location' +
+                       '&destination=' + latitude + ',' + longitude +
+                       '&avoid=tolls|highways" width="600" height="450" frameborder="0" style="border:0;" allowfullscreen=""></iframe>';
+            }
+        });
+    </script>
+</body>
+</html>
