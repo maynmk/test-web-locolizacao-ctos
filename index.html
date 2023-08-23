@@ -21,7 +21,7 @@
                 event.preventDefault();
                 var destino = $("#destinationInput").val();
                 $.ajax({
-                    url: "/obterCoordenadas",
+                    url: "obterCoordenadas",
                     method: "GET",
                     data: { destino: destino },
                     success: function (data) {
@@ -48,12 +48,13 @@
 
             function gerarEmbedCode(latitude, longitude) {
                 return '<iframe src="https://www.google.com/maps/embed/v1/directions' +
-                       '?key=AIzaSyAnZd-5OxzC697mbdB_Y4oQ0zZaUItbILM' +
-                       '&origin=Current+Location' +
-                       '&destination=' + latitude + ',' + longitude +
-                       '&avoid=tolls|highways" width="600" height="450" frameborder="0" style="border:0;" allowfullscreen=""></iframe>';
+                        '?key=AIzaSyAnZd-5OxzC697mbdB_Y4oQ0zZaUItbILM' +
+                        '&origin=Current+Location' +
+                        '&destination=' + latitude + ',' + longitude +
+                        '&avoid=tolls|highways" width="600" height="450" frameborder="0" style="border:0;" allowfullscreen=""></iframe>';
             }
         });
+
     </script>
 </body>
 </html>
